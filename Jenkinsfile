@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('Cloning Git') {
       steps {
-        git([url: 'https://github.com/aguscuk/cicd-jenkins-aks.git', branch: 'master', credentialsId: 'GitHub'])
+        git([url: 'https://github.com/aguscuk/cicd-jenkins-aks.git', branch: '', credentialsId: 'GitHub'])
 
       }
     }
