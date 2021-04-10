@@ -1,41 +1,32 @@
 pipeline {
-  environment {
-    imagename = "aguscuk/pod-info"
-    registryCredential = 'DockerHub'
-    dockerImage = ''
-  }
   agent any
   stages {
-    stage('Cloning Git') {
+    stage('Docker Build') {
       steps {
-        git([url: 'https://github.com/aguscuk/cicd-jenkins-aks.git', branch: '', credentialsId: 'GitHub'])
-
+        sh "docker build -t aguscuk/podinfo:${env.BUILD_NUMBER} ."
       }
     }
-    stage('Building image') {
-      steps{
-        script {
-          dockerImage = docker.build imagename
+    stage('Docker Push') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-aguscuk', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+          sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+          sh "docker push aguscuk/podinfo:${env.BUILD_NUMBER}"
         }
       }
     }
-    stage('Deploy Image') {
-      steps{
-        script {
-          docker.withRegistry( '', registryCredential ) {
-            dockerImage.push("$BUILD_NUMBER")
-             dockerImage.push('latest')
-
-          }
+    stage('Docker Remove Image') {
+      steps {
+        sh "docker rmi aguscuk/podinfo:${env.BUILD_NUMBER}"
+      }
+    }
+    stage('Apply Kubernetes Files') {
+      steps {
+          withKubeConfig([credentialsId: 'kube-km-aks-dev01']) {
+          sh 'cat deployment.yaml | sed "s/{{BUILD_NUMBER}}/$BUILD_NUMBER/g" | kubectl apply -f -'
+          sh 'kubectl apply -f service.yaml'
         }
       }
-    }
-    stage('Remove Unused docker image') {
-      steps{
-        sh "docker rmi $imagename:$BUILD_NUMBER"
-         sh "docker rmi $imagename:latest"
-
-      }
-    }
   }
+}
+
 }
