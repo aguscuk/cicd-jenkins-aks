@@ -1,21 +1,22 @@
-var express = require('express');
-var app = express();
+const express = require("express");
+const app = express();
 
-app.get('/getpodinfo', function (req, res) {
-    const podInfo = {
-        "MY_NODE_NAME": process.env.MY_NODE_NAME || '',
-        "MY_POD_NAME": process.env.MY_POD_NAME || '',
-        "MY_POD_NAMESPACE": process.env.MY_POD_NAMESPACE || '',
-        "MY_POD_IP": process.env.MY_POD_IP || '',
-        "MY_POD_SERVICE_ACCOUNT": process.env.MY_POD_SERVICE_ACCOUNT || '',
-        "HEADERS": req.headers
-    };
+app.listen(4444, function () {
+  console.log("listening on 4444");
+});
 
-    res.json(podInfo)
-})
+app.get("/", (req, res) => {
+  res.send("api lihat daftar user");
+});
 
-var server = app.listen(process.env.MY_PORT || 4444, function () {
-    var port = server.address().port;
-    
-    console.log("Server started! Listen Port = %s", port)
-})
+app.get("/delete", (req, res) => {
+  res.send("api hapus User");
+});
+
+app.get("/update", (req, res) => {
+  res.send("api ubah User");
+});
+
+app.get("/insert", (req, res) => {
+  res.send("api tambah User");
+});
