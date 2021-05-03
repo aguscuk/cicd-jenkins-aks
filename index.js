@@ -6,17 +6,17 @@ app.listen(4444, function () {
 });
 
 app.get("/", (req, res) => {
-  res.send("api lihat daftar user");
+  res.send("DEV - api lihat daftar user");
 });
 
 app.get("/delete", (req, res) => {
-  res.send("api hapus User");
+  res.send("DEV - api hapus User");
 });
 
 app.get("/update", (req, res) => {
-  res.send("api ubah User");
+  res.send("DEV - api ubah User");
 });
 
 app.get("/insert", (req, res) => {
-  res.send("api tambah User");
+  res.send("DEV - api tambah User");
 });
