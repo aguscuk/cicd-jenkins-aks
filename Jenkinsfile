@@ -77,8 +77,8 @@ pipeline {
             else if (env.GIT_BRANCH == 'origin/staging') {
                 withKubeConfig([credentialsId: 'cred-km-aks-lab01'])
                 {
-                    sh 'cat kube/deployment.yaml | sed "s/{{BUILD_NUMBER}}/$BUILD_NUMBER/g" | kubectl apply -f - -n production'
-                    sh 'cat kube/service.yaml | sed "s/{{NODE_PORT}}/31005/g" | kubectl apply -f - -n production'
+                    sh 'cat kube/deployment.yaml | sed "s/{{BUILD_NUMBER}}/$BUILD_NUMBER/g" | kubectl apply -f - -n staging'
+                    sh 'cat kube/service.yaml | sed "s/{{NODE_PORT}}/31005/g" | kubectl apply -f - -n staging'
                 }
             }
             else{}
